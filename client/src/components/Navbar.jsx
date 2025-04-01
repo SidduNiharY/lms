@@ -1,7 +1,7 @@
 import { Menu, School } from "lucide-react";
 import { Button } from "./ui/button";
 import {
-    DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, 
+    DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem,
     DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/avatar";
 import DarkMode from "@/DarkMode";
 import { Separator } from "@radix-ui/react-dropdown-menu";
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
     const user = true;
@@ -22,26 +23,32 @@ const Navbar = () => {
         <div className="h-16 bg-white border-b dark:border-b-gray-800 border-b-gray-200 fixed top-0 left-0 right-0 duration-300 z-10">
             {/* Desktop Navbar */}
             <div className="max-w-7xl mx-auto hidden md:flex justify-between items-center gap-10 h-full">
-                <div className="flex items-center gap-2 cursor-pointer">
-                    <School size={30} />
-                    <h1 className="hidden md:block font-extrabold text-2xl">E-Learning</h1>
-                </div>
+                <Link to="/">
+                    <div className="flex items-center gap-2 cursor-pointer">
+                        <School size={30} />
+                        <h1 className="hidden md:block font-extrabold text-2xl">E-Learning</h1>
+                    </div>
+                </Link>
                 {/* User Icons and Dark Mode */}
                 <div className="flex items-center gap-8">
                     {user ? (
-                        <DropdownMenu className = "cursor-pointer">
+                        <DropdownMenu>
                             <DropdownMenuTrigger asChild>
-                                <Avatar className = "cursor-pointer">
+                                <Avatar className="cursor-pointer">
                                     <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
                                     <AvatarFallback>CN</AvatarFallback>
                                 </Avatar>
                             </DropdownMenuTrigger>
-                            <DropdownMenuContent className="w-56 z-50">
+                            <DropdownMenuContent className="w-56 z-50 bg-white ">
                                 <DropdownMenuLabel>My Account</DropdownMenuLabel>
                                 <DropdownMenuSeparator />
                                 <DropdownMenuGroup>
-                                    <DropdownMenuItem>My Learning</DropdownMenuItem>
-                                    <DropdownMenuItem>Edit Profile</DropdownMenuItem>
+                                    <DropdownMenuItem>
+                                        <Link to="myLearning">My Learning</Link>
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem>
+                                        <Link to = "profile">Edit Profile</Link>
+                                    </DropdownMenuItem>
                                     <DropdownMenuItem>Log out</DropdownMenuItem>
                                 </DropdownMenuGroup>
                                 <DropdownMenuSeparator />
@@ -84,8 +91,8 @@ const MobileNavbar = () => {
                 </SheetHeader>
                 <Separator className="mr-2" />
                 <nav className="flex flex-col space-y-4 pl-4">
-                    <span>My Learning</span>
-                    <span>Edit Profile</span>
+                    <span><Link to="myLearning">My Learning</Link></span>
+                    <span><Link to = "profile">Edit Profile</Link></span>
                     <span>Log Out</span>
                 </nav>
                 {role === "instructor" && (

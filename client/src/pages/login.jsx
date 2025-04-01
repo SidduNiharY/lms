@@ -19,6 +19,7 @@ import { useLoginUserMutation, useRegisterUserMutation } from '@/features/api/au
 import { Loader2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { Input } from '@/components/ui/input';
+import { useNavigate } from 'react-router-dom';
 
 const AuthInput = ({ id, label, type, value, onChange }) => (
     <div className="space-y-1">
@@ -30,6 +31,8 @@ const AuthInput = ({ id, label, type, value, onChange }) => (
 const Login = () => {
     const [loginInput, setLoginInput] = useState({ email: "", password: "" });
     const [signupInput, setSignupInput] = useState({ name: "", email: "", password: "" });
+
+    const navigate = useNavigate();
 
     const changeInputHandler = (event, type) => {
         const { name, value } = event.target;
@@ -54,6 +57,7 @@ const Login = () => {
     useEffect(() => {
         if (loginSuccess) {
             toast.success(loginData?.message || "Login successful.");
+            navigate("/");
         } else if (loginError?.data?.message) {
             toast.error(loginError.data.message || "Login Failed");
         }

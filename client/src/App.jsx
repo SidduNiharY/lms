@@ -1,19 +1,49 @@
-import { useState } from 'react'
 import Login from './pages/login'
 import './App.css'
-import { Toaster } from 'react-hot-toast'
-import Navbar from './components/Navbar'
+import HeroSection from "./pages/student/HeroSection"
+import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import MainLayout from './layout/mainLayout'
+import Courses from './pages/student/Courses'
+import MyLearning from './pages/student/myLearning'
+import Profile from './pages/student/profile'
+
+const appRouter = createBrowserRouter([
+    {
+        path: "/",
+        element: <MainLayout />,
+        children: [
+            {
+                path: "/",
+                element:
+                    <>
+                        <HeroSection />
+                        <Courses />
+                        {/* Courses */}
+                    </>
+            },
+            {
+                path: "login",
+                element: <Login />
+            },
+            {
+                path : "mylearning",
+                element : <MyLearning/>
+            },
+            {
+                path: "profile",
+                element : <Profile/>
+            }
+        ]
+    }
+])
 
 function App() {
-  const [count, setCount] = useState(0)
 
-  return (
-    <main>
-      <Navbar/>
-      <Toaster />
-      <Login/>
-    </main>
-  )
+    return (
+        <main>
+            <RouterProvider router={appRouter} />
+        </main>
+    )
 }
 
 export default App

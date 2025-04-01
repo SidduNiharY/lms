@@ -69,3 +69,42 @@ export const login = async (req,res) => {
         })
     }
 };
+
+export const logout = async(req,res) => {
+    try {
+        return res.status(200).cookie(process.env.JWT_TOKEN,"",{maxAge:0}).json({
+            message : "Logged out successfully",
+            success : true,
+        });
+    } catch (error) {
+        console.log("Error at Logging Out:" + error);
+        return res.status(500).json({
+            success : false,
+            message : "Failed to logout",
+        })
+    }
+}
+
+
+export const getUserProfile = async(req,res) => {
+    try {
+        const userId = req.id;
+        const user = await User.findById(userId).select("-password");
+        if(!user){
+            return res.status(404).json({
+                message: "Profile not found",
+                success : false,
+            })
+        }
+        return res.status(200).json({
+            success : true,
+            user,
+        })
+    } catch (error) {
+        console.log("Error at Loading User:" + error);
+        return res.status(500).json({
+            success : false,
+            message : "Failed to Load User",
+        })
+    }
+}
