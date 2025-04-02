@@ -5,75 +5,75 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Loader2 } from "lucide-react";
 import Course from "./Course";
+import { useLoadUserQuery, useUpdateUserMutation } from "@/features/api/authApi";
 
-const profile = () => {
+const Profile = () => {
+    const enrolledCourses = [1, 2];
+    const { data, isLoading } = useLoadUserQuery();
+    const [updateuser , {data: updateUserData , isLoading: updataUserIsLoading, error }] = useUpdateUserMutation();
 
-    const isLoading = false;
-    const enrolledCourses = [1,2];
+    if(isLoading) return <h1>Profile isLoading..</h1>
+
+    const {user} = data;
+
 
     return (
         <div className="max-w-4xl mx-auto px-4 my-24">
             <h1 className="font-bold text-2xl text-center md:text-left">Profile</h1>
-            <div className="flex flex-col md:flex-row items-center  md:items-start gap-8 my-5">
+            <div className="flex flex-col md:flex-row items-center md:items-start gap-8 my-5">
                 <div className="flex flex-col items-center">
                     <Avatar className="h-24 w-24 md:h-32 md:w-32 mb-4">
-                        <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-                        <AvatarFallback>CN</AvatarFallback>
+                        <AvatarImage src={user.photoUrl || "https://github.com/shadcn.png"} alt={data?.name || "User"} />
+                        <AvatarFallback>{data?.name?.charAt(0) || "U"}</AvatarFallback>
                     </Avatar>
                 </div>
                 <div>
-                    <div className="mbg-2">
+                    <div className="mb-2">
                         <h1 className="font-semibold text-gray-900 dark:text-gray-100 ml-2">
-                            Name:
-                            <span className="font-normal text-gray-700 dark:text-gray-300 ml-2">Siddu Nihar</span>
+                            Name: 
+                            <span className="font-normal text-gray-700 dark:text-gray-300 ml-2">{user.name}</span>
                         </h1>
                     </div>
-                    <div className="mbg-2">
+                    <div className="mb-2">
                         <h1 className="font-semibold text-gray-900 dark:text-gray-100 ml-2">
-                            Email:
-                            <span className="font-normal text-gray-700 dark:text-gray-300 ml-2">siddu@gmail.com</span>
+                            Email: 
+                            <span className="font-normal text-gray-700 dark:text-gray-300 ml-2">{user.email || "Loading..."}</span>
                         </h1>
                     </div>
-                    <div className="mbg-2">
+                    <div className="mb-2">
                         <h1 className="font-semibold text-gray-900 dark:text-gray-100 ml-2">
-                            Role:
-                            <span className="font-normal text-gray-700 dark:text-gray-300 ml-2">INSTRUCTOR</span>
+                            Role: 
+                            <span className="font-normal text-gray-700 dark:text-gray-300 ml-2">{user.role.toUpperCase()}</span>
                         </h1>
                     </div>
                     <Dialog>
-                        <DialogTrigger>
-                            <Button size='sm' className='mt-2'>Edit Profile</Button>
+                        <DialogTrigger asChild>
+                            <Button size="sm" className="mt-2">Edit Profile</Button>
                         </DialogTrigger>
                         <DialogContent>
                             <DialogHeader>
                                 <DialogTitle>Edit Profile</DialogTitle>
                                 <DialogDescription>
-                                    Make changes to your profile. Click Save when you're Done.
+                                    Make changes to your profile. Click Save when you're done.
                                 </DialogDescription>
                             </DialogHeader>
                             <div className="grid gap-4 py-4">
                                 <div className="grid grid-cols-4 items-center gap-4">
                                     <Label>Name</Label>
-                                    <Input type="text" placeholder="Name" className="cols-span-3 w-max" />
+                                    <Input type="text" placeholder="Name" className="col-span-3 w-max" />
                                 </div>
                                 <div className="grid grid-cols-4 items-center gap-4">
                                     <Label>Image</Label>
-                                    <Input type="file" accept="image/*" className="cols-span-3 w-72" />
-                                </div>
-                                <div className="grid grid-cols-4 items-center gap-4">
-                                    <Label>Name</Label>
-                                    <Input type="text" placeholder="Name" className="cols-span-3 w-max" />
+                                    <Input type="file" accept="image/*" className="col-span-3 w-72" />
                                 </div>
                             </div>
                             <DialogFooter>
                                 <Button disabled={isLoading}>
-                                    {
-                                        isLoading ? (
-                                            <>
-                                                <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Please Wait
-                                            </>
-                                        ) : "Save Changes"
-                                    }
+                                    {isLoading ? (
+                                        <>
+                                            <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Please Wait
+                                        </>
+                                    ) : "Save Changes"}
                                 </Button>
                             </DialogFooter>
                         </DialogContent>
@@ -81,20 +81,17 @@ const profile = () => {
                 </div>
             </div>
             <div>
-                <h1 className = "font-medium text-lg">My Courses</h1>
-                <div className = "grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 my-5">
-                    {
-                        enrolledCourses.length === 0 ?
-                        <h1>You haven't enrolled Yet</h1>
-                        :
-                        (
-                            enrolledCourses.map((course,index) => <Course key = {index}/>)
-                        )
-                    }
+                <h1 className="font-medium text-lg">My Courses</h1>
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 my-5">
+                    {user.enrolledCourses.length === 0 ? (
+                        <h1>You haven't enrolled yet.</h1>
+                    ) : (
+                        enrolledCourses.map((course) => <Course course = {course} key={course._id} />)
+                    )}
                 </div>
             </div>
         </div>
-    )
-}
+    );
+};
 
-export default profile;
+export default Profile;
